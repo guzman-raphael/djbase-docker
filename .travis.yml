@@ -1,0 +1,59 @@
+branches:
+  only:
+  - master
+services: 
+- docker
+push: &push
+      after_success:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker images
+        - |
+          for i in `docker images --format {{.Repository}}:{{.Tag}}`; do
+            if [[ $TRAVIS_EVENT_TYPE == "push" ]]; then 
+              docker push $i;
+            fi
+          done
+alpine: &alpine
+      stage: Build
+      os: linux
+      language: shell
+      script:
+        - docker-compose -f dist/alpine/docker-compose.yml build
+        - docker rmi golang:alpine3.11
+        - docker rmi raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-alpine3.11
+      <<: *push
+debian: &debian
+      stage: Build
+      os: linux
+      language: shell
+      script:
+        - docker-compose -f dist/debian/docker-compose.yml build
+        - docker rmi golang:alpine3.11
+        - docker rmi raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-debian
+      <<: *push
+jobs:
+  include:
+    - <<: *alpine
+      env:
+      - CONDA_VER: 4.8.2
+      - PY_VER: 3.8
+    - <<: *alpine
+      env:
+      - CONDA_VER: 4.8.2
+      - PY_VER: 3.7
+    - <<: *alpine
+      env:
+      - CONDA_VER: 4.4.10
+      - PY_VER: 3.6
+    # - <<: *debian
+    #   env:
+    #   - CONDA_VER: 4.8.2
+    #   - PY_VER: 3.8
+    # - <<: *debian
+    #   env:
+    #   - CONDA_VER: 4.8.2
+    #   - PY_VER: 3.7
+    # - <<: *debian
+    #   env:
+    #   - CONDA_VER: 4.4.10
+    #   - PY_VER: 3.6

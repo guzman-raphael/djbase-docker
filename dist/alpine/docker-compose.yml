@@ -1,0 +1,16 @@
+version: '2.4'
+services:
+  app:
+    build:                                  # Uncomment to enable local build
+      context: ../..
+      dockerfile: ./dist/alpine/Dockerfile
+      args:
+        PY_VER: $PY_VER
+        CONDA_VER: $CONDA_VER
+    image: raphaelguzman/djbase:py${PY_VER}-alpine
+    environment:
+      - DISPLAY                             # Necessary to allow GUI to route to Docker host
+    command: tail -f /dev/null               # Container command e.g. here serving ipynb
+    user: ${UID}:anaconda                   # Necessary to allow GUI to route to Docker host
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw    # Necessary to allow GUI to route to Docker host
