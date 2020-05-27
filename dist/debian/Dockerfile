@@ -37,10 +37,12 @@ RUN \
     conda config --set auto_update_conda False && \
     conda clean -ya && \
     export MATPLOT_DIR=$(ls /opt/conda/pkgs | grep matplotlib-base) && \
-    rm /opt/conda/pkgs/$MATPLOT_DIR/lib/libtk.so && \
-    rm /opt/conda/pkgs/$MATPLOT_DIR/lib/libtcl.so && \
-    ln -s /opt/conda/lib/libtk.so  /opt/conda/pkgs/$MATPLOT_DIR/lib/libtk.so && \
-    ln -s /opt/conda/lib/libtcl.so /opt/conda/pkgs/$MATPLOT_DIR/lib/libtcl.so && \
+    if [ ! -z "$MATPLOT_DIR" ]; then \
+      rm /opt/conda/pkgs/$MATPLOT_DIR/lib/libtk.so; \
+      rm /opt/conda/pkgs/$MATPLOT_DIR/lib/libtcl.so; \
+      ln -s /opt/conda/lib/libtk.so  /opt/conda/pkgs/$MATPLOT_DIR/lib/libtk.so; \
+      ln -s /opt/conda/lib/libtcl.so /opt/conda/pkgs/$MATPLOT_DIR/lib/libtcl.so; \
+    fi && \ 
     find /opt/conda -user 3000 -exec chmod g+w "{}" \;
 
 user dja:anaconda
