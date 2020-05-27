@@ -47,15 +47,15 @@ jobs:
       env:
       - CONDA_VER: 4.4.10
       - PY_VER: 3.6
-    # - <<: *debian
-    #   env:
-    #   - CONDA_VER: 4.8.2
-    #   - PY_VER: 3.8
-    # - <<: *debian
-    #   env:
-    #   - CONDA_VER: 4.8.2
-    #   - PY_VER: 3.7
-    # - <<: *debian
-    #   env:
-    #   - CONDA_VER: 4.4.10
-    #   - PY_VER: 3.6
+    - <<: *debian
+      env:
+      - CONDA_VER: 4.8.2
+      - PY_VER: 3.8
+    - <<: *debian
+      env:
+      - CONDA_VER: 4.8.2
+      - PY_VER: 3.7
+    - <<: *debian
+      env:
+      - CONDA_VER: 4.4.10
+      - PY_VER: 3.6
