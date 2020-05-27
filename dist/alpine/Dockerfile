@@ -32,7 +32,7 @@ ARG PY_VER
 ARG CONDA_VER
 RUN \
     conda config --add channels conda-forge && \
-    conda install -yc conda-forge conda=$CONDA_VER python=$PY_VER datajoint --only-deps && \
+    conda install -yc conda-forge conda=$CONDA_VER datajoint --only-deps && \
     conda config --set auto_update_conda False && \
     find /opt/conda -user 3000 -exec chmod g+w "{}" \; && \
     conda clean -ya
