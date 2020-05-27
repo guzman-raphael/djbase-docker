@@ -5,8 +5,8 @@ services:
       context: ../..
       dockerfile: ./dist/alpine/Dockerfile
       args:
-        PY_VER: $PY_VER
-        CONDA_VER: $CONDA_VER
+        - PY_VER
+        - CONDA_VER
     image: raphaelguzman/djbase:py${PY_VER}-alpine
     environment:
       - DISPLAY                             # Necessary to allow GUI to route to Docker host

@@ -21,6 +21,7 @@ alpine: &alpine
         - docker-compose -f dist/alpine/docker-compose.yml build
         - docker rmi golang:alpine3.11
         - docker rmi raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-alpine3.11
+        - docker system prune -f
       <<: *push
 debian: &debian
       stage: Build
@@ -30,6 +31,7 @@ debian: &debian
         - docker-compose -f dist/debian/docker-compose.yml build
         - docker rmi golang:alpine3.11
         - docker rmi raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-debian
+        - docker system prune -f
       <<: *push
 jobs:
   include:
