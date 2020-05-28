@@ -16,6 +16,7 @@ RUN export uid=3000 gid=3000 && \
     # echo "dja:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dja && \
     chown ${uid}:${gid} -R /src && \
+    chown -R ${uid}:anaconda /opt/conda && \
     chmod -R g+w /opt/conda
 
 ENV PYTHON_USER dja
@@ -28,14 +29,16 @@ COPY ./utilities/shell_intercept.sh /etc/profile.d/
 
 SHELL ["/bin/sh", "-lc"]
 
-ARG PY_VER
-ARG CONDA_VER
 RUN \
+    export PY_VER=$(python -c "import sys;print(sys.version)" | head -1 | awk '{print $1}') && \
+    export CONDA_VER=$(conda -V | awk '{print $2}') && \
     conda config --add channels conda-forge && \
-    conda install -yc conda-forge conda=$CONDA_VER datajoint --only-deps && \
     conda config --set auto_update_conda False && \
-    find /opt/conda -user 3000 -exec chmod g+w "{}" \; && \
-    conda clean -ya
+    conda install -yc conda-forge python=$PY_VER backcall --only-deps && \
+    pip install backcall && \
+    conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \
+    conda clean -ya && \
+    find /opt/conda -user 3000 -exec chmod g+w "{}" \;
 
 user dja:anaconda
 ENV HOME /home/dja

@@ -37,25 +37,31 @@ jobs:
   include:
     - <<: *alpine
       env:
-      - CONDA_VER: 4.8.2
+      - LABEL: Alpine
       - PY_VER: 3.8
+      - CONDA_VER: 4.8.2
     - <<: *alpine
       env:
-      - CONDA_VER: 4.8.2
+      - LABEL: Alpine
       - PY_VER: 3.7
+      - CONDA_VER: 4.8.2
     - <<: *alpine
       env:
-      - CONDA_VER: 4.4.10
+      - LABEL: Alpine
       - PY_VER: 3.6
+      - CONDA_VER: 4.4.10
     - <<: *debian
       env:
-      - CONDA_VER: 4.8.2
+      - LABEL: Debian
       - PY_VER: 3.8
-    - <<: *debian
-      env:
       - CONDA_VER: 4.8.2
-      - PY_VER: 3.7
     - <<: *debian
       env:
-      - CONDA_VER: 4.4.10
+      - LABEL: Debian
+      - PY_VER: 3.7
+      - CONDA_VER: 4.8.2
+    - <<: *debian
+      env:
+      - LABEL: Debian
       - PY_VER: 3.6
+      - CONDA_VER: 4.4.10
