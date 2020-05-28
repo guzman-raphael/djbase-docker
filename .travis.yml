@@ -1,6 +1,11 @@
 branches:
   only:
   - master
+env:
+  global:
+    - DOCKER_CLIENT_TIMEOUT="120"
+    - COMPOSE_HTTP_TIMEOUT="120"
+    - UID="2000"
 services: 
 - docker
 push: &push
