@@ -29,12 +29,14 @@ COPY ./utilities/shell_intercept.sh /etc/profile.d/
 
 SHELL ["/bin/bash", "-lc"]
 
-ARG PY_VER
-ARG CONDA_VER
 RUN \
+    export PY_VER=$(python -c "import sys;print(sys.version)" | head -1 | awk '{print $1}') && \
+    export CONDA_VER=$(conda -V | awk '{print $2}') && \
     conda config --add channels conda-forge && \
-    conda install -yc conda-forge conda=$CONDA_VER datajoint --only-deps && \
     conda config --set auto_update_conda False && \
+    conda install -yc conda-forge python=$PY_VER backcall --only-deps && \
+    pip install backcall && \
+    conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \
     conda clean -ya && \
     export MATPLOT_DIR=$(ls /opt/conda/pkgs | grep matplotlib-base) && \
     if [ ! -z "$MATPLOT_DIR" ]; then \
