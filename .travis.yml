@@ -4,6 +4,10 @@ branches:
 services: 
 - docker
 push: &push
+      addons:
+        apt:
+          packages:
+            - docker-ce
       after_success:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker images
@@ -18,6 +22,7 @@ alpine: &alpine
       os: linux
       language: shell
       script:
+        - docker version
         - docker-compose -f dist/alpine/docker-compose.yml build
         - docker rmi golang:alpine3.11
         - docker rmi raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-alpine3.11
@@ -28,6 +33,7 @@ debian: &debian
       os: linux
       language: shell
       script:
+        - docker version
         - docker-compose -f dist/debian/docker-compose.yml build
         - docker rmi golang:alpine3.11
         - docker rmi raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-debian
