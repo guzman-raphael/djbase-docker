@@ -9,6 +9,7 @@ push: &push
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         - sudo apt-get update
         - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+        - docker version
       after_success:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker images
@@ -23,7 +24,6 @@ alpine: &alpine
       os: linux
       language: shell
       script:
-        - docker version
         - docker-compose -f dist/alpine/docker-compose.yml build
         - docker rmi golang:alpine3.11
         - docker rmi raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-alpine3.11
@@ -34,7 +34,6 @@ debian: &debian
       os: linux
       language: shell
       script:
-        - docker version
         - docker-compose -f dist/debian/docker-compose.yml build
         - docker rmi golang:alpine3.11
         - docker rmi raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-debian
