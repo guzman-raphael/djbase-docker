@@ -50,7 +50,7 @@ RUN \
 user dja:anaconda
 ENV HOME /home/dja
 ENV LANG C.UTF-8
-ENV APK_REQUIREMENTS /apk_requirements.txt
+ENV APT_REQUIREMENTS /apt_requirements.txt
 ENV PIP_REQUIREMENTS /pip_requirements.txt
 ENV CONDA_REQUIREMENTS /conda_requirements.txt
 COPY ./utilities/entrypoint.sh /entrypoint.sh
@@ -78,7 +78,7 @@ LABEL maintainerName="Raphael Guzman" \
 USER dja:anaconda
 ENV HOME /home/dja
 ENV LANG C.UTF-8
-ENV APK_REQUIREMENTS /apk_requirements.txt
+ENV APT_REQUIREMENTS /apt_requirements.txt
 ENV PIP_REQUIREMENTS /pip_requirements.txt
 ENV CONDA_REQUIREMENTS /conda_requirements.txt
 ENV PATH "/home/dja/.local/bin:/opt/conda/bin:$PATH"
