@@ -30,6 +30,7 @@ COPY ./utilities/shell_intercept.sh /etc/profile.d/
 SHELL ["/bin/bash", "-lc"]
 
 RUN \
+    umask u+rwx,g+rwx && \
     export PY_VER=$(python -c "import sys;print(sys.version)" | head -1 | awk '{print $1}') && \
     export CONDA_VER=$(conda -V | awk '{print $2}') && \
     conda config --add channels conda-forge && \
@@ -44,8 +45,7 @@ RUN \
       rm /opt/conda/pkgs/$MATPLOT_DIR/lib/libtcl.so; \
       ln -s /opt/conda/lib/libtk.so  /opt/conda/pkgs/$MATPLOT_DIR/lib/libtk.so; \
       ln -s /opt/conda/lib/libtcl.so /opt/conda/pkgs/$MATPLOT_DIR/lib/libtcl.so; \
-    fi && \ 
-    find /opt/conda -user 3000 -exec chmod g+w "{}" \;
+    fi
 
 user dja:anaconda
 ENV HOME /home/dja

@@ -30,6 +30,7 @@ COPY ./utilities/shell_intercept.sh /etc/profile.d/
 SHELL ["/bin/sh", "-lc"]
 
 RUN \
+    umask u+rwx,g+rwx && \
     export PY_VER=$(python -c "import sys;print(sys.version)" | head -1 | awk '{print $1}') && \
     export CONDA_VER=$(conda -V | awk '{print $2}') && \
     conda config --add channels conda-forge && \
@@ -37,8 +38,7 @@ RUN \
     conda install -yc conda-forge python=$PY_VER backcall --only-deps && \
     pip install backcall && \
     conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \
-    conda clean -ya && \
-    find /opt/conda -user 3000 -exec chmod g+w "{}" \;
+    conda clean -ya
 
 user dja:anaconda
 ENV HOME /home/dja
