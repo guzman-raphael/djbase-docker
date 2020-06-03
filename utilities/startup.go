@@ -7,16 +7,20 @@ import (
 	"strconv"
 	"os/exec"
 	"syscall"
+	"regexp"
 )
 
 func main() {
-	var user, uid, gid string = os.Getenv("PYTHON_USER"), os.Args[1], os.Args[2]
-	var home string = "/home/" + user
+	var py_user, uid, gid string = os.Getenv("PYTHON_USER"), os.Args[1], os.Args[2]
+	var home string = "/home/" + py_user
+
+	pattern := py_user + ":x:[0-9]+:[0-9]+:Developer"
+	re := regexp.MustCompile(pattern)
 
 	pass_byte, _ := ioutil.ReadFile("/etc/passwd")
 	pass_str := string(pass_byte)
 	pass_str = strings.Replace(
-		pass_str, user + ":x:3000:anaconda", user + ":x:" + uid + ":" + gid, -1)
+		pass_str, re.FindString(pass_str), py_user + ":x:" + uid + ":" + gid + ":Developer", -1)
 	pass_file, _ := os.Create("/etc/passwd")
 	pass_file.WriteString(pass_str)
 	pass_file.Close()
