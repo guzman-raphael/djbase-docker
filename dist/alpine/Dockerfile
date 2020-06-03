@@ -9,14 +9,14 @@ RUN cd / && go build startup.go
 from raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-alpine3.11 as py_build
 # # datajoint admin (dja) mapped to docker host user
 user root
-RUN export uid=3000 gid=3000 && \
+RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     mkdir -p /home/dja && \
     mkdir /src && \
-    echo "dja:x:${uid}:anaconda:Developer,,,:/home/dja:/bin/sh" >> /etc/passwd && \
+    echo "dja:x:${uid}:${gid}:Developer,,,:/home/dja:/bin/sh" >> /etc/passwd && \
     # echo "dja:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dja && \
     chown ${uid}:${gid} -R /src && \
-    chown -R ${uid}:anaconda /opt/conda && \
+    chown -R ${uid}:${gid} /opt/conda && \
     chmod -R g+w /opt/conda
 
 ENV PYTHON_USER dja
@@ -64,7 +64,7 @@ CMD ["/bin/sh", "-l"]
 FROM scratch
 COPY --from=py_build / /
 ENV PYTHON_USER dja
-RUN chmod 4755 /startup && /startup 3000 anaconda
+RUN chmod 4755 /startup && /startup $(id dja -u) $(id dja -g)
 LABEL maintainerName="Raphael Guzman" \
       maintainerEmail="raphael@vathes.com" \
       maintainerCompany="DataJoint"
