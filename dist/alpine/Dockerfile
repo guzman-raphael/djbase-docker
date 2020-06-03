@@ -15,7 +15,8 @@ RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     echo "dja:x:${uid}:${gid}:Developer,,,:/home/dja:/bin/sh" >> /etc/passwd && \
     # echo "dja:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dja && \
-    chown ${uid}:${gid} -R /src
+    chown ${uid}:${gid} -R /src && \
+    chown -R ${uid}:${gid} /opt/conda
 
 LABEL maintainerName="Raphael Guzman" \
       maintainerEmail="raphael@vathes.com" \
