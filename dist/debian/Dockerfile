@@ -9,7 +9,7 @@ RUN cd / && go build startup.go
 from raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-debian as py_build
 # # datajoint admin (dja) mapped to docker host user
 user root
-RUN export uid=3000 gid=$(id anaconda -g) && \
+RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     mkdir -p /home/dja && \
     mkdir /src && \
     echo "dja:x:${uid}:${gid}:Developer,,,:/home/dja:/bin/bash" >> /etc/passwd && \
