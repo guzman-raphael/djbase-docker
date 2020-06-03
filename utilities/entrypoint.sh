@@ -3,6 +3,9 @@
 #Fix UID/GID
 /startup -user=dja -new_uid=$(id -u) -new_gid=$(id -g)
 
+#Enable conda paths
+. /etc/profile.d/shell_intercept.sh
+
 #Install Python dependencies
 if [ -f "$PIP_REQUIREMENTS" ]; then
     pip install --user -r $PIP_REQUIREMENTS
@@ -14,5 +17,4 @@ if [ -f "$CONDA_REQUIREMENTS" ]; then
 fi
 
 #Command
-. /etc/profile.d/shell_intercept.sh
 "$@"

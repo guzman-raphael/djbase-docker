@@ -1,4 +1,7 @@
 #!/bin/sh
 . /opt/conda/etc/profile.d/conda.sh
 conda activate
-export PATH=/home/dja/.local/bin:$PATH
+if ! [ $(id -u) = 0 ]; then
+    export HOME=/home/$(whoami)
+fi
+export PATH=$(readlink -f "$HOME")/.local/bin:$PATH

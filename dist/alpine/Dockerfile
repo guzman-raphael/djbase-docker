@@ -15,10 +15,8 @@ RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     echo "dja:x:${uid}:${gid}:Developer,,,:/home/dja:/bin/sh" >> /etc/passwd && \
     # echo "dja:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dja && \
-    chown ${uid}:${gid} -R /src && \
-    chown -R ${uid}:${gid} /opt/conda
+    chown ${uid}:${gid} -R /src
 
-ENV PYTHON_USER dja
 LABEL maintainerName="Raphael Guzman" \
       maintainerEmail="raphael@vathes.com" \
       maintainerCompany="DataJoint"
@@ -29,7 +27,7 @@ COPY ./utilities/shell_intercept.sh /etc/profile.d/
 SHELL ["/bin/sh", "-lc"]
 
 RUN \
-    umask u+rwx,g+rwx && \
+    umask u+rwx,g+rwx,o-rwx && \
     export PY_VER=$(python -c "import sys;print(sys.version)" | head -1 | awk '{print $1}') && \
     export CONDA_VER=$(conda -V | awk '{print $2}') && \
     conda config --add channels conda-forge && \
@@ -62,7 +60,6 @@ CMD ["/bin/sh", "-l"]
 # #Squashed Final Image
 FROM scratch
 COPY --from=py_build / /
-ENV PYTHON_USER dja
 RUN chmod 4755 /startup && /startup -user=dja
 LABEL maintainerName="Raphael Guzman" \
       maintainerEmail="raphael@vathes.com" \
