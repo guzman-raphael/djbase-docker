@@ -16,8 +16,7 @@ RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     # echo "dja:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dja && \
     chown ${uid}:${gid} -R /src && \
-    chown -R ${uid}:${gid} /opt/conda && \
-    chmod -R g+w /opt/conda
+    chown -R ${uid}:${gid} /opt/conda
 
 ENV PYTHON_USER dja
 LABEL maintainerName="Raphael Guzman" \
@@ -64,7 +63,7 @@ CMD ["/bin/sh", "-l"]
 FROM scratch
 COPY --from=py_build / /
 ENV PYTHON_USER dja
-RUN chmod 4755 /startup && /startup $(id dja -u) $(id dja -g)
+RUN chmod 4755 /startup && /startup -user=dja
 LABEL maintainerName="Raphael Guzman" \
       maintainerEmail="raphael@vathes.com" \
       maintainerCompany="DataJoint"

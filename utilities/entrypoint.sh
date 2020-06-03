@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #Fix UID/GID
-/startup $(id -u) $(id -g)
+/startup -user=dja -new_uid=$(id -u) -new_gid=$(id -g)
 
 #Install Python dependencies
 if [ -f "$PIP_REQUIREMENTS" ]; then
