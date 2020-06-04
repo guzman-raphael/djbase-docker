@@ -15,8 +15,7 @@ RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     echo "dja:x:${uid}:${gid}:Developer,,,:/home/dja:/bin/bash" >> /etc/passwd && \
     # echo "dja:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dja && \
-    chown ${uid}:${gid} -R /src && \
-    chown -R ${uid}:${gid} /opt/conda
+    chown ${uid}:${gid} -R /src
 
 LABEL maintainerName="Raphael Guzman" \
       maintainerEmail="raphael@vathes.com" \
@@ -37,6 +36,7 @@ RUN \
     pip install backcall && \
     conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \
     conda clean -ya && \
+    chmod -R u+rwx,g+rwx,o-rwx /opt/conda/conda-meta && \
     export MATPLOT_DIR=$(ls /opt/conda/pkgs | grep matplotlib-base) && \
     if [ ! -z "$MATPLOT_DIR" ]; then \
       rm /opt/conda/pkgs/$MATPLOT_DIR/lib/libtk.so; \
