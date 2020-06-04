@@ -36,7 +36,7 @@ RUN \
     pip install backcall && \
     conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \
     conda clean -ya && \
-    chmod -R u+rwx,g+rwx,o-rwx /opt/conda/conda-meta
+    find /opt/conda/conda-meta -user dja -exec chmod u+rwx,g+rwx,o-rwx "{}" \;
 
 user dja:anaconda
 ENV HOME /home/dja

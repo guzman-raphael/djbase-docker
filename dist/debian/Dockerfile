@@ -36,7 +36,7 @@ RUN \
     pip install backcall && \
     conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \
     conda clean -ya && \
-    chmod -R u+rwx,g+rwx,o-rwx /opt/conda/conda-meta && \
+    find /opt/conda/conda-meta -user dja -exec chmod u+rwx,g+rwx,o-rwx "{}" \; && \
     export MATPLOT_DIR=$(ls /opt/conda/pkgs | grep matplotlib-base) && \
     if [ ! -z "$MATPLOT_DIR" ]; then \
       rm /opt/conda/pkgs/$MATPLOT_DIR/lib/libtk.so; \
