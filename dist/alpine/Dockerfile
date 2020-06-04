@@ -15,8 +15,7 @@ RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     echo "dja:x:${uid}:${gid}:Developer,,,:/home/dja:/bin/sh" >> /etc/passwd && \
     # echo "dja:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dja && \
-    chown ${uid}:${gid} -R /src && \
-    chown -R ${uid}:${gid} /opt/conda
+    chown ${uid}:${gid} -R /src
 
 LABEL maintainerName="Raphael Guzman" \
       maintainerEmail="raphael@vathes.com" \
@@ -36,7 +35,8 @@ RUN \
     conda install -yc conda-forge python=$PY_VER backcall --only-deps && \
     pip install backcall && \
     conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \
-    conda clean -ya
+    conda clean -ya && \
+    find /opt/conda/conda-meta -user dja -exec chmod u+rwx,g+rwx,o-rwx "{}" \;
 
 user dja:anaconda
 ENV HOME /home/dja
