@@ -1,20 +1,23 @@
 #!/bin/sh
 
+#Set default permission of new files
+umask u+rwx,g+rwx,o-rwx
+
 #Fix UID/GID
 /startup -user=dja -new_uid=$(id -u) -new_gid=$(id -g)
 
 #Enable conda paths
 . /etc/profile.d/shell_intercept.sh
 
-#Install Python dependencies
-if [ -f "$PIP_REQUIREMENTS" ]; then
-    pip install --user -r $PIP_REQUIREMENTS
-fi
-
 #Install Conda dependencies
 if [ -f "$CONDA_REQUIREMENTS" ]; then
     conda install -yc conda-forge --file $CONDA_REQUIREMENTS
 fi
 
-#Command
+#Install Python dependencies
+if [ -f "$PIP_REQUIREMENTS" ]; then
+    pip install -r $PIP_REQUIREMENTS --upgrade
+fi
+
+#Run command
 "$@"
