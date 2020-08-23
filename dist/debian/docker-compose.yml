@@ -7,7 +7,7 @@ services:
       args:
         - PY_VER
         - CONDA_VER
-    image: raphaelguzman/djbase:py${PY_VER}-debian
+    image: datajoint/djbase:py${PY_VER}-debian
     environment:
       - DISPLAY                             # Necessary to allow GUI to route to Docker host
     command: tail -f /dev/null               # Container command e.g. here serving ipynb

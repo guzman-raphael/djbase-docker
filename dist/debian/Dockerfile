@@ -6,9 +6,9 @@ FROM golang:alpine3.11 as go_tmp
 COPY ./utilities/startup.go /startup.go
 RUN cd / && go build startup.go
 
-from raphaelguzman/miniconda3:${CONDA_VER}-py${PY_VER}-debian as py_build
+FROM datajoint/miniconda3:${CONDA_VER}-py${PY_VER}-debian as py_build
 # # datajoint admin (dja) mapped to docker host user
-user root
+USER root
 RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     mkdir -p /home/dja && \
     mkdir /src && \
@@ -45,7 +45,7 @@ RUN \
       ln -s /opt/conda/lib/libtcl.so /opt/conda/pkgs/$MATPLOT_DIR/lib/libtcl.so; \
     fi
 
-user dja:anaconda
+USER dja:anaconda
 ENV HOME /home/dja
 ENV LANG C.UTF-8
 ENV APT_REQUIREMENTS /apt_requirements.txt
@@ -53,7 +53,7 @@ ENV PIP_REQUIREMENTS /pip_requirements.txt
 ENV CONDA_REQUIREMENTS /conda_requirements.txt
 COPY ./utilities/entrypoint.sh /entrypoint.sh
 COPY --from=go_tmp /startup /startup
-user root
+USER root
 RUN \
   chmod +x /entrypoint.sh && \
   chmod 4755 /startup
