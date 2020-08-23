@@ -8,9 +8,16 @@ services:
         - PY_VER
         - CONDA_VER
     image: raphaelguzman/djbase:py${PY_VER}-alpine
-    environment:
-      - DISPLAY                             # Necessary to allow GUI to route to Docker host
+    # environment:
+    #   - DISPLAY                             # Necessary to allow GUI to route to Docker host
     command: tail -f /dev/null               # Container command e.g. here serving ipynb
-    user: ${UID}:anaconda                   # Necessary to allow GUI to route to Docker host
+    # entrypoint: ["/bin/sh"]
+    # command:
+    #   - -c
+    #   - >
+    #     echo hey;
+    #     tail -f /dev/null;
+    # user: ${UID}:anaconda                   # Necessary to allow GUI to route to Docker host
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw    # Necessary to allow GUI to route to Docker host
+      # - /tmp/.X11-unix:/tmp/.X11-unix:rw    # Necessary to allow GUI to route to Docker host
+      - ../../config/apk_requirements.txt:/apk_requirements.txt    # Necessary to allow GUI to route to Docker host
