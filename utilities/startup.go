@@ -40,7 +40,9 @@ func main() {
 		uid_int, _ := strconv.Atoi(*new_uid)
 		gid_int, _ := strconv.Atoi(*new_gid)
 		// Rename home dir
-		exec.Command("mv", home, *new_home).CombinedOutput()
+		if &home != new_home {
+			exec.Command("mv", home, *new_home).CombinedOutput()
+		}
 		// Add symlink if new user
 		if user != new_user {
 			os.Symlink(*new_home, "/home/" + *new_user)
