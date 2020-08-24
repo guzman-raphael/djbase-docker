@@ -12,11 +12,11 @@ FROM datajoint/miniconda3:${CONDA_VER}-py${PY_VER}-alpine3.11-${BASE_IMAGE_HASH}
 USER root
 RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
     mkdir -p /home/dja && \
-    mkdir /src && \
+    mkdir /main && \
     echo "dja:x:${uid}:${gid}:Developer,,,:/home/dja:/bin/sh" >> /etc/passwd && \
     # echo "dja:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dja && \
-    chown ${uid}:${gid} -R /src
+    chown ${uid}:${gid} -R /main
 
 LABEL maintainerName="Raphael Guzman" \
       maintainerEmail="raphael@vathes.com" \
@@ -53,8 +53,7 @@ RUN \
   chmod +x /entrypoint.sh && \
   chmod 4755 /startup
 ENTRYPOINT ["/entrypoint.sh"]
-WORKDIR /src
-VOLUME /src
+WORKDIR /main
 VOLUME /tmp/.X11-unix
 EXPOSE 8888
 CMD ["/bin/sh", "-l"]
@@ -75,8 +74,7 @@ ENV PIP_REQUIREMENTS /tmp/pip_requirements.txt
 ENV CONDA_REQUIREMENTS /tmp/conda_requirements.txt
 ENV PATH "/home/dja/.local/bin:/opt/conda/bin:$PATH"
 ENTRYPOINT ["/entrypoint.sh"]
-WORKDIR /src
-VOLUME /src
+WORKDIR /main
 VOLUME /tmp/.X11-unix
 EXPOSE 8888
 CMD ["/bin/sh", "-l"]
