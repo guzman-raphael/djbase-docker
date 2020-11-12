@@ -3,11 +3,11 @@ ARG CONDA_VER
 ARG PY_VER
 
 #Temp Image to create exec to allow UID/GID to be updated on boot
-FROM golang:alpine3.11 as go_tmp
+FROM golang:alpine as go_tmp
 COPY ./utilities/startup.go /startup.go
 RUN cd / && go build startup.go
 
-FROM datajoint/miniconda3:${CONDA_VER}-py${PY_VER}-alpine3.11-${BASE_IMAGE_HASH} as py_build
+FROM datajoint/miniconda3:${CONDA_VER}-py${PY_VER}-alpine-${BASE_IMAGE_HASH} as py_build
 # # datajoint admin (dja) mapped to docker host user
 USER root
 RUN export uid=3000 gid=$(awk -F':' '/^anaconda/{print $3}' /etc/group) && \
@@ -32,8 +32,6 @@ RUN \
     export PY_VER=$(python -c "import sys;print(sys.version)" | \
       head -1 | awk '{print $1}') && \
     export CONDA_VER=$(conda -V | awk '{print $2}') && \
-    conda config --add channels conda-forge && \
-    conda config --set auto_update_conda False && \
     conda install -yc conda-forge python=$PY_VER backcall --only-deps && \
     pip install backcall && \
     conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \

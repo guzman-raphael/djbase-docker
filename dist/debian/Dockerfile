@@ -3,7 +3,7 @@ ARG CONDA_VER
 ARG PY_VER
 
 #Temp Image to create exec to allow UID/GID to be updated on boot
-FROM golang:alpine3.11 as go_tmp
+FROM golang:alpine as go_tmp
 COPY ./utilities/startup.go /startup.go
 RUN cd / && go build startup.go
 
@@ -32,8 +32,6 @@ RUN \
     export PY_VER=$(python -c "import sys;print(sys.version)" | \
       head -1 | awk '{print $1}') && \
     export CONDA_VER=$(conda -V | awk '{print $2}') && \
-    conda config --add channels conda-forge && \
-    conda config --set auto_update_conda False && \
     conda install -yc conda-forge python=$PY_VER backcall --only-deps && \
     pip install backcall && \
     conda install -yc conda-forge python=$PY_VER datajoint --only-deps && \
@@ -63,7 +61,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 WORKDIR /main
 VOLUME /tmp/.X11-unix
 EXPOSE 8888
-CMD ["/bin/bash", "-l"]
+CMD ["/bin/bash"]
 
 
 # #Squashed Final Image
@@ -84,4 +82,4 @@ ENTRYPOINT ["/entrypoint.sh"]
 WORKDIR /main
 VOLUME /tmp/.X11-unix
 EXPOSE 8888
-CMD ["/bin/bash", "-l"]
+CMD ["/bin/bash"]
