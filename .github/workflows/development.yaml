@@ -39,7 +39,7 @@ jobs:
       DOCKER_CLIENT_TIMEOUT: "120"
       COMPOSE_HTTP_TIMEOUT: "120"
       HOST_UID: "1001"
-      BASE_IMAGE_HASH: "e756162"
+      BASE_IMAGE_HASH: "7210574"
     steps:
       - uses: actions/checkout@v2
       - name: Compile image
@@ -134,7 +134,7 @@ jobs:
           docker load < "py${PY_VER}-${DISTRO}.tar.gz"
           IMAGE=$(docker images --filter "reference=datajoint/*" --format "{{.Repository}}")
           TAG=$(docker images --filter "reference=datajoint/*" --format "{{.Tag}}")
-          docker push "${IMAGE}:{TAG}"
+          docker push "${IMAGE}:${TAG}"
           docker tag "${IMAGE}:${TAG}" "${IMAGE}:${TAG}-${GITHUB_SHA:0:7}"
           docker push "${IMAGE}:${TAG}-${GITHUB_SHA:0:7}"
           [ "$PY_VER" == "3.9" ] && [ "$DISTRO" == "debian" ] \
@@ -163,6 +163,7 @@ jobs:
           rm -R gh-pages/*
           cp -r docs/_build/html/* gh-pages/
           cp .gitignore gh-pages/
+          touch gh-pages/.nojekyll
           cd gh-pages
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
